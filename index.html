@@ -1,36 +1,43 @@
 <!DOCTYPE html>
 <html>
-<head>
-    <meta charset="UTF-8">
-    <title>Ofisiant Paneli</title>
-</head>
 <body>
-    <h2>Sifariş Girişi</h2>
 
-    <label>Masa nömrəsi:</label>
-    <input id="table" type="text"><br><br>
+<h3>Sifariş Göndər</h3>
 
-    <label>Sifariş:</label>
-    <input id="order" type="text"><br><br>
+<input id="table" placeholder="Masa nömrəsi"><br><br>
+<textarea id="order" placeholder="Sifariş"></textarea><br><br>
+<button onclick="sendOrder()">Göndər</button>
 
-    <button onclick="sendOrder()">Göndər</button>
+<script type="module">
+  import { initializeApp } from "https://www.gstatic.com/firebasejs/10.10.0/firebase-app.js";
+  import { getFirestore, collection, addDoc } from "https://www.gstatic.com/firebasejs/10.10.0/firebase-firestore.js";
 
-    <script type="module" src="firebase.js"></script>
-    <script type="module">
-        import { db, push, ref } from "./firebase.js";
+  const firebaseConfig = {
+    apiKey: "AIzaSyCwnnn6JYf-...",
+    authDomain: "cay-love-you.firebaseapp.com",
+    projectId: "cay-love-you",
+    storageBucket: "cay-love-you.firebasestorage.app",
+    messagingSenderId: "526657108236",
+    appId: "1:526657108236:web:8ce574d880d232c754b129",
+    measurementId: "G-XVP460DCK9"
+  };
 
-        window.sendOrder = function () {
-            const masa = document.getElementById("table").value;
-            const order = document.getElementById("order").value;
+  const app = initializeApp(firebaseConfig);
+  const db = getFirestore(app);
 
-            push(ref(db, "orders"), {
-                table: masa,
-                order: order,
-                time: Date.now()
-            });
+  async function sendOrder() {
+    const table = document.getElementById("table").value;
+    const order = document.getElementById("order").value;
 
-            alert("Sifariş göndərildi!");
-        }
-    </script>
+    await addDoc(collection(db, "orders"), {
+      table: table,
+      text: order,
+      time: Date.now()
+    });
+
+    alert("Sifariş Göndərildi!");
+  }
+</script>
+
 </body>
 </html>
