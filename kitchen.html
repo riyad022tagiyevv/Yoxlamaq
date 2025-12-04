@@ -1,0 +1,26 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <meta charset="UTF-8">
+    <title>Mətbəx Paneli</title>
+</head>
+<body>
+    <h2>Gələn Sifarişlər</h2>
+    <div id="list"></div>
+
+    <script type="module" src="firebase.js"></script>
+    <script type="module">
+        import { db, ref, onValue } from "./firebase.js";
+
+        const list = document.getElementById("list");
+
+        onValue(ref(db, "orders"), snapshot => {
+            list.innerHTML = "";
+            snapshot.forEach(order => {
+                const data = order.val();
+                list.innerHTML += `<p><b>Masa:</b> ${data.table} — ${data.order}</p>`;
+            });
+        });
+    </script>
+</body>
+</html>
