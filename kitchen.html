@@ -1,26 +1,43 @@
 <!DOCTYPE html>
 <html>
-<head>
-    <meta charset="UTF-8">
-    <title>Mətbəx Paneli</title>
-</head>
 <body>
-    <h2>Gələn Sifarişlər</h2>
-    <div id="list"></div>
 
-    <script type="module" src="firebase.js"></script>
-    <script type="module">
-        import { db, ref, onValue } from "./firebase.js";
+<h3>Mətbəx Paneli</h3>
+<div id="orders"></div>
 
-        const list = document.getElementById("list");
+<script type="module">
+  import { initializeApp } from "https://www.gstatic.com/firebasejs/10.10.0/firebase-app.js";
+  import { getFirestore, collection, onSnapshot } from "https://www.gstatic.com/firebasejs/10.10.0/firebase-firestore.js";
 
-        onValue(ref(db, "orders"), snapshot => {
-            list.innerHTML = "";
-            snapshot.forEach(order => {
-                const data = order.val();
-                list.innerHTML += `<p><b>Masa:</b> ${data.table} — ${data.order}</p>`;
-            });
-        });
-    </script>
+  const firebaseConfig = {
+    apiKey: "AIzaSyCwnnn6JYf-...",
+    authDomain: "cay-love-you.firebaseapp.com",
+    projectId: "cay-love-you",
+    storageBucket: "cay-love-you.firebasestorage.app",
+    messagingSenderId: "526657108236",
+    appId: "1:526657108236:web:8ce574d880d232c754b129",
+    measurementId: "G-XVP460DCK9"
+  };
+
+  const app = initializeApp(firebaseConfig);
+  const db = getFirestore(app);
+
+  onSnapshot(collection(db, "orders"), (snapshot) => {
+    const div = document.getElementById("orders");
+    div.innerHTML = "";
+
+    snapshot.forEach((doc) => {
+      const item = doc.data();
+      div.innerHTML += `
+        <div style="margin:10px; padding:10px; background:#eee;">
+          <b>Masa: ${item.table}</b><br>
+          ${item.text}<br>
+          <small>${new Date(item.time).toLocaleTimeString()}</small>
+        </div>
+      `;
+    });
+  });
+</script>
+
 </body>
 </html>
