@@ -1,0 +1,36 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <meta charset="UTF-8">
+    <title>Ofisiant Paneli</title>
+</head>
+<body>
+    <h2>Sifariş Girişi</h2>
+
+    <label>Masa nömrəsi:</label>
+    <input id="table" type="text"><br><br>
+
+    <label>Sifariş:</label>
+    <input id="order" type="text"><br><br>
+
+    <button onclick="sendOrder()">Göndər</button>
+
+    <script type="module" src="firebase.js"></script>
+    <script type="module">
+        import { db, push, ref } from "./firebase.js";
+
+        window.sendOrder = function () {
+            const masa = document.getElementById("table").value;
+            const order = document.getElementById("order").value;
+
+            push(ref(db, "orders"), {
+                table: masa,
+                order: order,
+                time: Date.now()
+            });
+
+            alert("Sifariş göndərildi!");
+        }
+    </script>
+</body>
+</html>
